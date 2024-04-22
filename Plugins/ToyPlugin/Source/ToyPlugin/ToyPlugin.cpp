@@ -6,6 +6,7 @@
 #include "Actors/CMeshActor.h"
 #include "DebuggerCategory/DebuggerCategory.h"
 #include "DetailPanel/StaticMesh_DetailPanel.h"
+#include "AssetViewer/AssetViewer.h"
 
 #define LOCTEXT_NAMESPACE "FToyPluginModule"
 
@@ -58,6 +59,7 @@ void FToyPluginModule::ShutdownModule()
 		IGameplayDebugger::Get().UnregisterCategory("AwesomeCategory");
 
 	FIconStyle::Shutdown();
+	FAssetViewer::Shutdown();
 }
 
 void FToyPluginModule::AddToolBar_LoadMesh(FToolBarBuilder& InBuilder)

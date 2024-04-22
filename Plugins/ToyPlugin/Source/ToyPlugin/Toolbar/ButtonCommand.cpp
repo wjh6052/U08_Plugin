@@ -4,8 +4,11 @@
 #include "Serialization/BufferArchive.h"
 #include "DetailPanel/StaticMesh_DetailPanel.h"
 #include "LevelEditorViewport.h"
-#include "Actors/CMeshActor_Copied.h"
 #include "Misc/FileHelper.h"
+
+#include "Actors/CMeshActor_Copied.h"
+#include "Actors/CAssetObject.h"
+#include "AssetViewer/AssetViewer.h"
 
 
 
@@ -136,4 +139,6 @@ void FButtonCommand::OnClicked_LoadMesh()
 void FButtonCommand::OnClicked_OpenViewer()
 {
 	UE_LOG(LogTemp, Error, TEXT("Open Viewer Button is Clicked"));
+
+	FAssetViewer::OpenWindow(NewObject<UCAssetObject>());
 }
