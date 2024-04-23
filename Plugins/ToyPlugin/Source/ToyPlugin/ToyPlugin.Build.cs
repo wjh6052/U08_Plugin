@@ -7,8 +7,8 @@ public class ToyPlugin : ModuleRules
 	public ToyPlugin(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
-		
-		PrivateIncludePaths.Add(ModuleDirectory);
+
+		publicIncludePaths.Add(ModuleDirectory);
 			
 		
 		PublicDependencyModuleNames.AddRange(new string[]
@@ -28,11 +28,13 @@ public class ToyPlugin : ModuleRules
 			"Projects",
 			"GameplayDebugger",
 			"DesktopPlatform",
-			"ProceduralMeshComponent",
 			"MainFrame",
 			"UnrealEd",
 			"Core",
-			"Toy"
+			"AdvancedPreviewScene",
+			"InputCore",
+			"Toy",
+			"AssetTools"
 		});
 		
 		

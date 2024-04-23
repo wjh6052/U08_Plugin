@@ -1,6 +1,10 @@
 #include "AssetViewer.h"
 #include "Global.h"
 
+#include "AssetViewer_Viewport.h"
+#include "AdvancedPreviewSceneModule.h"
+
+
 
 TSharedPtr<FAssetViewer> FAssetViewer::Instance = nullptr;
 const static FName ToolkitName = L"AssetViewer";
@@ -22,12 +26,6 @@ void FAssetViewer::OpenWindow(UObject* InAsset)
 	Instance = MakeShareable(new FAssetViewer());
 	Instance->OpenWindow_International(InAsset);
 
-
-
-
-
-
-
 }
 
 void FAssetViewer::Shutdown()
@@ -38,6 +36,18 @@ void FAssetViewer::Shutdown()
 
 void FAssetViewer::OpenWindow_International(UObject* InAsset)
 {
+	Viewport = SNew(SAssetViewer_Viewport);
+	
+	FAdvancedPreviewSceneModule& previewScene = FModuleManager::LoadModuleChecked<FAdvancedPreviewSceneModule>("AdvancedPreviewScene");
+	PreviewSceneSettings = previewScene.CreateAdvancedPreviewSceneSettingsWidget(Viewport->GetScene());
+
+
+	FPropertyEditorModule& propertyEditor = FModuleManager::LoadModuleChecked<FPropertyEditorModule>("PropertyEditor");
+	FDetailsViewArgs args(false,false,true, FDetailsViewArgs::ENameAreaSettings::ObjectsUseNameArea);
+	DetailsView = propertyEditor.CreateDetailView(args);
+	DetailsView->SetObject(InAsset);
+
+
 	TSharedRef<FTabManager::FLayout> layout = FTabManager::NewLayout("AssetViewer_Layout")
 		->AddArea
 		(
@@ -106,8 +116,10 @@ void FAssetViewer::RegisterTabSpawners(const TSharedRef<FTabManager>& InTabManag
 {
 	FAssetEditorToolkit::RegisterTabSpawners(InTabManager);
 
-	FOnSpawnTab tab = FOnSpawnTab::CreateSP(this, &FAssetViewer::Spawn_ViewportTab);
-	TabManager->RegisterTabSpawner(ViewportTabID, tab);
+
+	TabManager->RegisterTabSpawner(ViewportTabID, FOnSpawnTab::CreateSP(this, &FAssetViewer::Spawn_ViewportTab));
+	TabManager->RegisterTabSpawner(PreviewTabID, FOnSpawnTab::CreateSP(this, &FAssetViewer::Spawn_PreviewSceneSettingsTab));
+	TabManager->RegisterTabSpawner(DetailsTabID, FOnSpawnTab::CreateSP(this, &FAssetViewer::Spawn_DetailsViewTab));
 }
 
 FName FAssetViewer::GetToolkitFName() const
@@ -135,7 +147,22 @@ TSharedRef<SDockTab> FAssetViewer::Spawn_ViewportTab(const FSpawnTabArgs& inArg)
 
 	return SNew(SDockTab)
 		[
-			SNew(SButton)
-			.Text(FText::FromString("Test"))
+			Viewport.ToSharedRef()
+		];
+}
+
+TSharedRef<SDockTab> FAssetViewer::Spawn_PreviewSceneSettingsTab(const FSpawnTabArgs& inArg)
+{
+	return SNew(SDockTab)
+		[
+			PreviewSceneSettings.ToSharedRef()
+		];
+}
+
+TSharedRef<SDockTab> FAssetViewer::Spawn_DetailsViewTab(const FSpawnTabArgs& inArg)
+{
+	return SNew(SDockTab)
+		[
+			DetailsView.ToSharedRef()
 		];
 }

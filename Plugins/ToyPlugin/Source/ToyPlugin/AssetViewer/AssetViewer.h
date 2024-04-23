@@ -18,17 +18,27 @@ private:
 public:
 	virtual void RegisterTabSpawners(const TSharedRef<FTabManager>& InTabManager) override;
 
+
 public:
 	virtual FName GetToolkitFName() const override;
 	virtual FText GetBaseToolkitName() const override;
 	virtual FString GetWorldCentricTabPrefix() const override;
 	virtual FLinearColor GetWorldCentricTabColorScale() const override;
 
+
 private:
 	TSharedRef<SDockTab> Spawn_ViewportTab(const FSpawnTabArgs& inArg);
+	TSharedRef<SDockTab> Spawn_PreviewSceneSettingsTab(const FSpawnTabArgs& inArg);
+	TSharedRef<SDockTab> Spawn_DetailsViewTab(const FSpawnTabArgs& inArg);
 
 
 private:
 	static TSharedPtr<FAssetViewer> Instance;
+
+
+private:
+	TSharedPtr<class SAssetViewer_Viewport> Viewport;
+	TSharedPtr<class SWidget> PreviewSceneSettings;
+	TSharedPtr<class IDetailsView> DetailsView;
 
 };

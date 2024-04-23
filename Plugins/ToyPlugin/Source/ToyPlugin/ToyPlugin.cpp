@@ -1,14 +1,18 @@
 #include "ToyPlugin.h"
 #include "LevelEditor.h"
 #include "GameplayDebugger.h"
+#include "AssetToolsModule.h"
+
 #include "Toolbar/ButtonCommand.h"
 #include "Toolbar/IconStyle.h"
 #include "Actors/CMeshActor.h"
 #include "DebuggerCategory/DebuggerCategory.h"
 #include "DetailPanel/StaticMesh_DetailPanel.h"
 #include "AssetViewer/AssetViewer.h"
+#include "AssetTools/CAssetAction.h"
 
 #define LOCTEXT_NAMESPACE "FToyPluginModule"
+
 
 void FToyPluginModule::StartupModule()
 {
@@ -49,11 +53,21 @@ void FToyPluginModule::StartupModule()
 			FOnGetDetailCustomizationInstance::CreateStatic(&FStaticMesh_DetailPanel::MakeInstance)
 		);
 	}
+
+	//AssetTools
+	{
+		IAssetTools& assetTools = FModuleManager::LoadModuleChecked<FAssetToolsModule>("AssetTools").Get();
+		EAssetTypeCategories::Type category = assetTools.RegisterAdvancedAssetCategory(NAME_None, FText::FromString("Awesome"));
+		AssetTypeAction = MakeShareable(new FCAssetAction(category));
+		assetTools.RegisterAssetTypeActions(AssetTypeAction.ToSharedRef());
+	}
 }
 
 void FToyPluginModule::ShutdownModule()
 {
 	UE_LOG(LogTemp, Error, TEXT("Shutdown Toy Plugin"));
+
+	FModuleManager::LoadModuleChecked<FAssetToolsModule>("AssetTools").Get().UnregisterAssetTypeActions(AssetTypeAction.ToSharedRef());;
 
 	if (IGameplayDebugger::IsAvailable())
 		IGameplayDebugger::Get().UnregisterCategory("AwesomeCategory");
