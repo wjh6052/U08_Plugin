@@ -1,4 +1,5 @@
 #include "ToyCharacter.h"
+#include "Global.h"
 #include "HeadMountedDisplayFunctionLibrary.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -8,8 +9,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "AssetTools/CDataAsset.h"
 
-//////////////////////////////////////////////////////////////////////////
-// AToyCharacter
+
 
 AToyCharacter::AToyCharacter()
 {
@@ -42,8 +42,12 @@ AToyCharacter::AToyCharacter()
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 
-	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
-	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
+	UCDataAsset* dataAsset;
+	CHelpers::GetAsset<UCDataAsset>(&dataAsset, "CDataAsset'/Game/Blueprints/DA_2.DA_2'");
+	CLog::Log("EquipmentClass Name : " + dataAsset->GetEquipmentClass()->GetName());
+	CLog::Log("EquipmentMontage Name : " + dataAsset->GetEquipmentMontage()->GetName());
+	CLog::Log("PlayRate Name : " + FString::SanitizeFloat(dataAsset->GetPlayRate()));
+	CLog::Log("SkeletalMesh Name : " + dataAsset->GetSkeletalMesh()->GetName());
 }
 
 //////////////////////////////////////////////////////////////////////////

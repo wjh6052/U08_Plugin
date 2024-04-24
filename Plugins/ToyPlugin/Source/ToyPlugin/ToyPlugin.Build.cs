@@ -8,7 +8,7 @@ public class ToyPlugin : ModuleRules
 	{
 		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
 
-		publicIncludePaths.Add(ModuleDirectory);
+		PublicIncludePaths.Add(ModuleDirectory);
 			
 		
 		PublicDependencyModuleNames.AddRange(new string[]

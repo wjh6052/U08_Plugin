@@ -67,7 +67,6 @@ void FToyPluginModule::ShutdownModule()
 {
 	UE_LOG(LogTemp, Error, TEXT("Shutdown Toy Plugin"));
 
-	FModuleManager::LoadModuleChecked<FAssetToolsModule>("AssetTools").Get().UnregisterAssetTypeActions(AssetTypeAction.ToSharedRef());;
 
 	if (IGameplayDebugger::IsAvailable())
 		IGameplayDebugger::Get().UnregisterCategory("AwesomeCategory");
